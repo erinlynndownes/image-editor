@@ -1,11 +1,13 @@
-export function generateEditedImageUrl(
-  imageId: number,
+import { ImageDetail } from "../types";
+
+export const generateEditedImageUrl = (
+  id: number,
   width?: number,
   height?: number,
   grayscale?: boolean,
   blur?: number
-): string {
-  let url = `/id/${imageId}`;
+) => {
+  let url = `/id/${id}`;
 
   if (width) {
     url += `/${width}`;
@@ -16,12 +18,21 @@ export function generateEditedImageUrl(
   }
 
   if (grayscale) {
-    url += `?grayscale`;
+    url += "?grayscale";
   }
 
   if (blur) {
-    url += `?blur=${blur}`;
+    url += `${grayscale ? "&" : "?"}blur=${blur}`;
   }
 
   return url;
-}
+};
+
+export const filterImagesByAuthorAndId = (
+  details: ImageDetail,
+  searchInput: string
+) => {
+  return (
+    details.id.includes(searchInput) || details.author.includes(searchInput)
+  );
+};

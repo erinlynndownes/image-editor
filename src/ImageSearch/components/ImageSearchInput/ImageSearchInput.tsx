@@ -12,7 +12,7 @@ const ImageSearchInput = (props: ImageSearchProps) => {
   return (
     <>
       <Typography.Text>Search by id or author</Typography.Text>
-      <Input onChange={handleOnChange} />
+      <Input onChange={handleOnChange} placeholder="Search by id or author" />
     </>
   );
 };

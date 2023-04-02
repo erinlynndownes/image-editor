@@ -31,7 +31,7 @@ const ImageList = ({ images, handleLoadMore, loading }: ImageListProps) => {
   }, []);
 
   return (
-    <div style={{ height: 500, overflow: "auto" }}>
+    <div style={{ height: 500, overflow: "auto" }} data-testid="image-list">
       <List
         grid={{
           gutter: 16

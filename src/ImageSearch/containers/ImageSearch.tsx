@@ -3,14 +3,8 @@ import ImageSearchInput from "../components/ImageSearchInput";
 import { useImageSearchState } from "../state";
 
 const ImageSearch = () => {
-  const {
-    images,
-    isLoading,
-    setSearchInput,
-    currentPage,
-    setCurrentPage,
-    hasMoreResults
-  } = useImageSearchState();
+  const { images, isLoading, setSearchInput, setCurrentPage } =
+    useImageSearchState();
 
   const handlePageChange = () => {
     setCurrentPage((prevPage: number) => prevPage + 1);

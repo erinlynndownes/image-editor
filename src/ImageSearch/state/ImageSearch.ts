@@ -20,7 +20,7 @@ interface ImageSearchState {
 
 export const useImageSearchState = (): ImageSearchState => {
   const [isLoading, setIsLoading] = useState(false);
-  const [hasMoreResults, setHasMoreResults] = useState(true);
+  const [hasMoreResults, setHasMoreResults] = useState(false);
   const [loadedImages, setLoadedImages] = useState<ImageDetail[]>([]);
   const [searchInput, setSearchInput] = useState<string | undefined>(undefined);
   const [currentPage, setCurrentPage] = useState(1);
@@ -37,9 +37,11 @@ export const useImageSearchState = (): ImageSearchState => {
         DEFAULT_FETCH_LIMIT
       );
 
-      setLoadedImages([...imgs]);
+      if (imgs) {
+        setLoadedImages([...imgs]);
+      }
       setIsLoading(false);
-      setHasMoreResults(imgs.length <= DEFAULT_FETCH_LIMIT);
+      setHasMoreResults(!Boolean(!imgs || imgs.length <= DEFAULT_FETCH_LIMIT));
     }
     const debouncedFetch = debounce(fetchImages, DEBOUNCE_TIME, {
       leading: true

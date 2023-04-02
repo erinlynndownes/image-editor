@@ -1,11 +1,42 @@
 import { generateEditedImageUrl } from "./utils";
-import { GetEditedImageInput } from "./types";
+import { GetEditedImageInput, ImageDetail } from "./types";
 
 const API_BASE_URL = "https://picsum.photos";
+export const DEFAULT_FETCH_LIMIT = 60;
 
-export const getImageList = async (pagination: number = 1) => {
-  const res = await fetch(`${API_BASE_URL}/v2/list?page=${pagination}`);
+export const getImageList = async (
+  pagination: number = 1,
+  pageLimit = DEFAULT_FETCH_LIMIT
+) => {
+  const res = await fetch(
+    `${API_BASE_URL}/v2/list?page=${pagination}&limit=${pageLimit}`
+  );
   return res.json();
+};
+
+export const getFilteredImageList = async (
+  filterFn: (details: ImageDetail) => boolean,
+  paginationStart = 1,
+  limit = DEFAULT_FETCH_LIMIT
+) => {
+  let result: ImageDetail[] = [];
+  let page = paginationStart;
+  let next = true;
+  while (result.length < limit && next) {
+    try {
+      const res: ImageDetail[] = await getImageList(page);
+
+      const filtered = res.filter(filterFn);
+
+      result = [...result, ...filtered];
+      if (res.length < limit) next = false;
+      page++;
+    } catch (e) {
+      console.error("Error fetching images", e);
+    }
+  }
+
+  return result;
 };
 
 export const getImage = async (id: number) => {

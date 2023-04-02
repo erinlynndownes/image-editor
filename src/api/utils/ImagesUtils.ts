@@ -1,5 +1,3 @@
-import { ImageDetail } from "../types";
-
 export const generateEditedImageUrl = (
   id: number,
   width?: number,
@@ -26,13 +24,4 @@ export const generateEditedImageUrl = (
   }
 
   return url;
-};
-
-export const filterImagesByAuthorAndId = (
-  details: ImageDetail,
-  searchInput: string
-) => {
-  return (
-    details.id.includes(searchInput) || details.author.includes(searchInput)
-  );
 };

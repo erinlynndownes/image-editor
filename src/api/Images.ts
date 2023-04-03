@@ -32,6 +32,7 @@ export const getFilteredImageList = async (
       if (res.length < limit) next = false;
       page++;
     } catch (e) {
+      next = false;
       console.error("Error fetching images", e);
     }
   }
@@ -39,8 +40,8 @@ export const getFilteredImageList = async (
   return result;
 };
 
-export const getImage = async (id: number) => {
-  const res = await fetch(`${API_BASE_URL}/id/${id}`);
+export const getImageDetails = async (id: number) => {
+  const res = await fetch(`${API_BASE_URL}/id/${id}/info`);
   return res.json();
 };
 

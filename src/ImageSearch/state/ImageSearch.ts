@@ -37,6 +37,8 @@ export const useImageSearchState = (): ImageSearchState => {
         DEFAULT_FETCH_LIMIT
       );
 
+      console.log(" FILTERED RES: ", imgs, currentPage);
+
       if (imgs) {
         setLoadedImages([...imgs]);
       }

@@ -1,7 +1,7 @@
 import { renderHook, act } from "@testing-library/react-hooks";
 import { DEFAULT_FETCH_LIMIT, getFilteredImageList } from "../../api";
 import { ImageDetail } from "../../api/types";
-import { DEBOUNCE_TIME, filterImagesByAuthorOrId } from "../feature";
+import { DEBOUNCE_TIME } from "../feature";
 import { useImageSearchState } from "./ImageSearch";
 
 jest.mock("../../api");
@@ -64,7 +64,7 @@ describe("useImageSearchState", () => {
   it("should filter images correctly", async () => {
     // since we are mocking the whole getFilteredList function, it won't use filterFn passed in by the hook, which is why chatGPT mocked it
     // but mocking this filtering here isn't really testing anything
-    const mockFilterFn = (details, searchInput) =>
+    const mockFilterFn = (details: ImageDetail, searchInput: string) =>
       details.author === searchInput;
     const mockFilter = (details: ImageDetail) =>
       mockFilterFn(details, "author 1");

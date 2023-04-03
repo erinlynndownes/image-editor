@@ -24,8 +24,6 @@ export const createFilteredImage = async (
   const drawHeight = imageProcessData.height;
   const filterString = imageProcessData.filterString;
 
-  console.log(" WHAT FILTER STR? ", imageProcessData, imageProcessors.length);
-
   const blob = await getImageById(imageId);
 
   const img = new Image();
@@ -52,23 +50,8 @@ export const createFilteredImage = async (
 
       resolve({ filteredImageUrl: data, width: drawWidth, height: drawHeight });
     };
-
-    // Handle any errors that occur while loading the image
     img.onerror = function () {
       reject("Error loading image");
     };
   });
 };
-
-function getFilterFunctions(editValues: ImageEditValues) {
-  let filterStr = ``;
-  if (editValues.blurAmount) {
-    filterStr += `blur(${editValues.blurAmount}px) `;
-  }
-
-  if (editValues.grayscale) {
-    filterStr += `grayscale(100%)`;
-  }
-
-  return filterStr;
-}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getImageDetails } from "../../api";
 import { ImageDetail } from "../../api/types";
@@ -7,7 +7,9 @@ import {
   FilterImageData,
   getDefaultEditValues,
   ImageEditValues,
-  ImageProcessFn
+  ImageProcessFn,
+  loadFeatureState,
+  saveFeatureState
 } from "../feature";
 import { ImageEditContext } from "./ImageEditState";
 
@@ -15,14 +17,21 @@ interface ProviderProps {
   children?: React.ReactNode;
 }
 
-const ImageEditStateProvider: React.FC<ProviderProps> = ({
-  children
-}: ProviderProps) => {
+const ImageEditStateProvider = ({ children }: ProviderProps) => {
   const { imageId } = useParams();
 
-  const [editStateValues, setEditStateValues] = useState<ImageEditValues>(
-    getDefaultEditValues()
-  );
+  const defaultEditValues = useMemo(() => getDefaultEditValues(), []);
+  const [editStateValues, setEditStateValues] =
+    useState<ImageEditValues>(defaultEditValues);
+
+  useEffect(() => {
+    setEditStateValues(loadFeatureState(imageId ?? ""));
+  }, [imageId]);
+
+  useEffect(() => {
+    saveFeatureState(imageId, editStateValues);
+  }, [editStateValues, imageId]);
+
   const [imageDetails, setImageDetails] = useState<ImageDetail | undefined>(
     undefined
   );
@@ -62,7 +71,6 @@ const ImageEditStateProvider: React.FC<ProviderProps> = ({
   }, [editStateValues, imageId]);
 
   const handleAddImageProcessor = useCallback((processor: ImageProcessFn) => {
-    console.log(" ADD PROCESSOR");
     setProcessors((prev) => [...prev, processor]);
   }, []);
 

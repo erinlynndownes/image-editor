@@ -3,6 +3,7 @@ import { ChangeEvent } from "react";
 
 interface ImageSearchProps {
   onChange: (searchInput: string | undefined) => void;
+  initialValue?: string;
 }
 
 const ImageSearchInput = (props: ImageSearchProps) => {
@@ -12,7 +13,11 @@ const ImageSearchInput = (props: ImageSearchProps) => {
   return (
     <>
       <Typography.Text>Search by id or author</Typography.Text>
-      <Input onChange={handleOnChange} placeholder="Search by id or author" />
+      <Input
+        defaultValue={props.initialValue}
+        onChange={handleOnChange}
+        placeholder="Search by id or author"
+      />
     </>
   );
 };

@@ -38,17 +38,20 @@ export const EditToolsConfg = [
   {
     component: Grayscale,
     defaultValue: { grayscale: false },
-    processImage: GrayscaleImageRender
+    processImage: GrayscaleImageRender,
+    key: "Grayscale"
   },
   {
     component: Blur,
     defaultValue: { blurAmount: 0 },
-    processImage: BlurImageRender
+    processImage: BlurImageRender,
+    key: "Blur"
   },
   {
     component: Size,
     defaultValue: { height: 100, widht: 100 },
-    processImage: SizeImageRender
+    processImage: SizeImageRender,
+    key: "Size"
   }
 ];
 
@@ -83,4 +86,26 @@ export const downloadFilteredImage = (filteredImage: string | undefined) => {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+};
+
+const FEATURE_STATE_KEY = "imageEditStateValues";
+
+export const loadFeatureState = (imageId: string) => {
+  const localStorageValue = localStorage.getItem(FEATURE_STATE_KEY);
+  const parsedValue = JSON.parse(localStorageValue ?? `{}`);
+  return parsedValue[imageId] || getDefaultEditValues();
+};
+
+export const saveFeatureState = (
+  imageId: string | undefined,
+  editValues: ImageEditValues
+) => {
+  if (imageId) {
+    const localStorageValue = localStorage.getItem(FEATURE_STATE_KEY);
+    const parsedValue = localStorageValue ? JSON.parse(localStorageValue) : {};
+    localStorage.setItem(
+      FEATURE_STATE_KEY,
+      JSON.stringify({ ...parsedValue, [imageId]: editValues })
+    );
+  }
 };

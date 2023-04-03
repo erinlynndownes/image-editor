@@ -12,3 +12,13 @@ export const filterImagesByAuthorOrId = (
     Boolean(details.author.match(searchInput ?? ""))
   );
 };
+
+const SEARCH_INPUT_KEY = "searchInput";
+
+export const loadFeatureState = () => {
+  return localStorage.getItem(SEARCH_INPUT_KEY);
+};
+
+export const saveFeatureState = (searchInput: string) => {
+  localStorage.setItem(SEARCH_INPUT_KEY, searchInput || "");
+};

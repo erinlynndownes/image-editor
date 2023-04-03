@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import {
-  DEFAULT_FETCH_LIMIT,
-  getFilteredImageList,
-  getImageList
-} from "../../api";
+import { DEFAULT_FETCH_LIMIT, getFilteredImageList } from "../../api";
 import { ImageDetail } from "../../api/types";
 import { debounce } from "lodash";
-import { DEBOUNCE_TIME, filterImagesByAuthorOrId } from "../feature";
+import {
+  DEBOUNCE_TIME,
+  filterImagesByAuthorOrId,
+  loadFeatureState,
+  saveFeatureState
+} from "../feature";
 
 interface ImageSearchState {
   isLoading: boolean;
@@ -19,14 +20,21 @@ interface ImageSearchState {
 }
 
 export const useImageSearchState = (): ImageSearchState => {
+  const history = loadFeatureState();
   const [isLoading, setIsLoading] = useState(false);
   const [hasMoreResults, setHasMoreResults] = useState(false);
   const [loadedImages, setLoadedImages] = useState<ImageDetail[]>([]);
-  const [searchInput, setSearchInput] = useState<string | undefined>(undefined);
+  const [searchInput, setSearchInput] = useState<string | undefined>(
+    history ?? undefined
+  );
   const [currentPage, setCurrentPage] = useState(1);
 
   const filter = (details: ImageDetail) =>
     filterImagesByAuthorOrId(details, searchInput);
+
+  useEffect(() => {
+    saveFeatureState(searchInput ?? "");
+  }, [searchInput]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -36,8 +44,6 @@ export const useImageSearchState = (): ImageSearchState => {
         currentPage,
         DEFAULT_FETCH_LIMIT
       );
-
-      console.log(" FILTERED RES: ", imgs, currentPage);
 
       if (imgs) {
         setLoadedImages([...imgs]);

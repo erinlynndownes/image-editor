@@ -3,7 +3,7 @@ import ImageSearchInput from "../components/ImageSearchInput";
 import { useImageSearchState } from "../state";
 
 const ImageSearch = () => {
-  const { images, isLoading, setSearchInput, setCurrentPage } =
+  const { images, isLoading, setSearchInput, setCurrentPage, searchInput } =
     useImageSearchState();
 
   const handlePageChange = () => {
@@ -11,7 +11,7 @@ const ImageSearch = () => {
   };
   return (
     <>
-      <ImageSearchInput onChange={setSearchInput} />
+      <ImageSearchInput onChange={setSearchInput} initialValue={searchInput} />
       <ImageList
         images={images}
         handleLoadMore={handlePageChange}

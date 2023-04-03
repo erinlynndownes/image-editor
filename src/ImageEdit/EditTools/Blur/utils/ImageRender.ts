@@ -5,8 +5,8 @@ function processImage(
   initialProcessData: ImageProcessData
 ): ImageProcessData {
   const blurAmount = editStateValues.blurAmount;
-  const filterStr = `blur(${blurAmount}px) `;
-  console.log(" BLUR: ", blurAmount, filterStr);
+  const filterStr =
+    (initialProcessData.filterString += ` blur(${blurAmount}px) `);
   return {
     ...initialProcessData,
     filterString: filterStr

@@ -1,8 +1,11 @@
+import { ImageProcessFn } from "../../../../feature";
 import SizeInputs from "../../components/SizeInputs";
 import { useSizeToolState } from "../../state/SizeToolState";
 
-const Size = () => {
-  const { changeSize } = useSizeToolState();
+type SizeProps = { processFn: ImageProcessFn };
+
+const Size = ({ processFn }: SizeProps) => {
+  const { changeSize } = useSizeToolState(processFn);
 
   return <SizeInputs handleChange={changeSize} />;
 };

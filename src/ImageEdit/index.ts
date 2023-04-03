@@ -1,3 +1,3 @@
-import ImageEdit from "./containers/ImageEdit";
+import ImageEdit from "./containers/ImageEdit/ImageEdit";
 
 export default ImageEdit;

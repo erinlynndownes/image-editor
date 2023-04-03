@@ -1,8 +1,14 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getImageDetails } from "../../api";
 import { ImageDetail } from "../../api/types";
-import { getDefaultEditValues, ImageEditValues } from "../feature";
+import {
+  createFilteredImage,
+  FilterImageData,
+  getDefaultEditValues,
+  ImageEditValues,
+  ImageProcessFn
+} from "../feature";
 import { ImageEditContext } from "./ImageEditState";
 
 interface ProviderProps {
@@ -21,6 +27,10 @@ const ImageEditStateProvider: React.FC<ProviderProps> = ({
     undefined
   );
 
+  const [editedImg, setEditedImage] = useState<FilterImageData | undefined>();
+
+  const [processors, setProcessors] = useState<ImageProcessFn[]>([]);
+
   useEffect(() => {
     async function fetchImage() {
       if (imageId) {
@@ -31,17 +41,38 @@ const ImageEditStateProvider: React.FC<ProviderProps> = ({
     fetchImage();
   }, [imageId]);
 
-  const handleSetState = (key: string, val: unknown) => {
+  const handleSetEditState = (key: string, val: unknown) => {
     setEditStateValues({
       ...editStateValues,
       [key]: val
     });
   };
 
+  useEffect(() => {
+    if (!imageId) return undefined;
+    async function filterImage() {
+      const filteredImage = await createFilteredImage(
+        Number(imageId),
+        editStateValues,
+        processors
+      );
+      setEditedImage(filteredImage);
+    }
+    filterImage();
+  }, [editStateValues, imageId]);
+
+  const handleAddImageProcessor = useCallback((processor: ImageProcessFn) => {
+    console.log(" ADD PROCESSOR");
+    setProcessors((prev) => [...prev, processor]);
+  }, []);
+
   const initialContextValues = {
     ...editStateValues,
     imageDetails: imageDetails,
-    setEditState: handleSetState
+    editedImg: editedImg,
+    setEditState: handleSetEditState,
+    processFunctions: processors,
+    addImageProcessFunction: handleAddImageProcessor
   };
 
   return (

@@ -1,5 +1,5 @@
 import { useContext, useMemo } from "react";
-import DisplayCanvasComp from "../../components/Canvas";
+import DisplayCanvasComponent from "../../components/Canvas";
 import { ImageEditContext } from "../../state";
 
 const DisplayCanvas = () => {
@@ -7,14 +7,17 @@ const DisplayCanvas = () => {
 
   if (!ctx) return null;
 
-  const [editValues, imageDetails] = useMemo(() => {
-    const { setEditState: _, imageDetails, ...rest } = ctx;
-    return [rest, imageDetails];
+  const editedImg = useMemo(() => {
+    const { editedImg } = ctx;
+    return editedImg;
   }, [ctx]);
+
+  if (!editedImg) return null;
   return (
-    <DisplayCanvasComp
-      imageUrl={imageDetails?.download_url ?? " "}
-      editValues={editValues}
+    <DisplayCanvasComponent
+      filteredImageUrl={editedImg.filteredImageUrl}
+      width={editedImg.width}
+      height={editedImg.height}
     />
   );
 };

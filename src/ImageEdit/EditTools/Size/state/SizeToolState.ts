@@ -1,5 +1,5 @@
-import { useContext, useState } from "react";
-import { ImageEditState } from "../../../feature";
+import { useContext, useEffect, useState } from "react";
+import { ImageEditState, ImageProcessFn } from "../../../feature";
 import { ImageEditContext } from "../../../state";
 
 interface SizeToolState {
@@ -8,9 +8,15 @@ interface SizeToolState {
   changeSize: (dimension: "width" | "height", value: number) => void;
 }
 
-export const useSizeToolState = (): SizeToolState => {
-  const { setEditState } = useContext(ImageEditContext) as ImageEditState;
+export const useSizeToolState = (processFn: ImageProcessFn): SizeToolState => {
+  const { setEditState, addImageProcessFunction } = useContext(
+    ImageEditContext
+  ) as ImageEditState;
   const [currentSize, setCurrentSize] = useState({ width: 50, height: 50 });
+
+  useEffect(() => {
+    addImageProcessFunction(processFn);
+  }, []);
 
   const changeSize = (dimension: "width" | "height", value: number) => {
     const updatedSize = {

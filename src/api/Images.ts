@@ -45,6 +45,11 @@ export const getImageDetails = async (id: number) => {
   return res.json();
 };
 
+export const getImageById = async (id: number) => {
+  const res = await fetch(`${API_BASE_URL}/id/${id}/200/300`);
+  return res.blob();
+};
+
 export const getEditedImage = async (options: GetEditedImageInput) => {
   const editedUrl = generateEditedImageUrl(
     options.id,

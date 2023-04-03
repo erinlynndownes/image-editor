@@ -1,18 +1,20 @@
-import { ImageEditValues } from "../../feature";
-
 interface DisplayCanvasProps {
-  imageUrl: string;
-  editValues: ImageEditValues;
+  filteredImageUrl: string;
+  width: number;
+  height: number;
 }
 
-const DisplayCanvas = ({ imageUrl, editValues }: DisplayCanvasProps) => {
-  // renders the image with applied filters
-
+const DisplayCanvas = ({
+  filteredImageUrl,
+  width,
+  height
+}: DisplayCanvasProps) => {
   return (
     <img
-      src={imageUrl}
-      width={editValues.size.width}
-      height={editValues.size.height}
+      src={filteredImageUrl}
+      width={width}
+      height={height}
+      alt="Filtered image"
     />
   );
 };

@@ -9,13 +9,13 @@ const SizeInputs = ({ handleChange }: SizeInputsProps) => {
     <>
       <Typography.Text>WIDTH:</Typography.Text>
       <Input
-        onChange={(val) => handleChange("width", Number(val))}
+        onChange={(e) => handleChange("width", Number(e.target.value))}
         placeholder="enter a width"
         type="number"
       />
       <Typography.Text>HEIGHT:</Typography.Text>
       <Input
-        onChange={(val) => handleChange("height", Number(val))}
+        onChange={(e) => handleChange("height", Number(e.target.value))}
         placeholder="enter a height"
         type="number"
       />

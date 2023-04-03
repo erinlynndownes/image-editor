@@ -1,16 +1,21 @@
 import Download from "../Download";
-import { EditToolsConfg } from "../../feature";
+import { EditToolsConfig } from "../../feature";
 import ImageEditStateProvider from "../../state/ImageEditStateProvider";
 import DisplayCanvas from "../DisplayCanvas";
-import { useRef } from "react";
 
 const ImageEdit = () => {
   return (
     <ImageEditStateProvider>
-      <DisplayCanvas />
-      {EditToolsConfg.map((config) => {
+      <DisplayCanvas data-testid="display-canvas" />
+      {EditToolsConfig.map((config) => {
         const Element = config.component;
-        return <Element key={config.key} processFn={config.processImage} />;
+        return (
+          <Element
+            key={config.key}
+            processFn={config.processImage}
+            data-testid={`edit-tool-${config.key}`}
+          />
+        );
       })}
 
       <Download />

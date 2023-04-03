@@ -34,7 +34,7 @@ export type ImageEditState = ImageEditValues & {
   addImageProcessFunction: (fn: ImageProcessFn) => void;
 };
 
-export const EditToolsConfg = [
+export const EditToolsConfig = [
   {
     component: Grayscale,
     defaultValue: { grayscale: false },

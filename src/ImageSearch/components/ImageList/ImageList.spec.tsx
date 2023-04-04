@@ -29,7 +29,6 @@ describe("ImageList", () => {
   });
 
   afterAll(() => {
-    // Clean up the mock
     // @ts-ignore
     window.IntersectionObserver.mockRestore();
   });
@@ -40,6 +39,8 @@ describe("ImageList", () => {
         images={images}
         handleLoadMore={handleLoadMore}
         loading={loading}
+        hasMore={true}
+        currentPage={1}
       />
     );
   });

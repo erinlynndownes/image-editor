@@ -5,9 +5,16 @@ import { useSizeToolState } from "../../state/SizeToolState";
 type SizeProps = { processFn: ImageProcessFn };
 
 const Size = ({ processFn }: SizeProps) => {
-  const { changeSize } = useSizeToolState(processFn);
+  const { changeSize, currentHeight, currentWidth } =
+    useSizeToolState(processFn);
 
-  return <SizeInputs handleChange={changeSize} />;
+  return (
+    <SizeInputs
+      handleChange={changeSize}
+      defaultWidth={currentWidth}
+      defaultHeight={currentHeight}
+    />
+  );
 };
 
 export default Size;

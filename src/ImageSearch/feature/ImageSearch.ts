@@ -1,8 +1,5 @@
 import { ImageDetail } from "../../api/types";
 
-export const DEFAULT_PAGE_LIMIT = 30;
-export const DEBOUNCE_TIME = 100;
-
 export const filterImagesByAuthorOrId = (
   details: ImageDetail,
   searchInput: string | undefined
@@ -13,12 +10,13 @@ export const filterImagesByAuthorOrId = (
   );
 };
 
-const SEARCH_INPUT_KEY = "searchInput";
+const SEARCH_INPUT_KEY = "currentPage";
 
 export const loadFeatureState = () => {
-  return localStorage.getItem(SEARCH_INPUT_KEY);
+  const storedPage = localStorage.getItem(SEARCH_INPUT_KEY);
+  return storedPage ?? 1;
 };
 
-export const saveFeatureState = (searchInput: string) => {
-  localStorage.setItem(SEARCH_INPUT_KEY, searchInput || "");
+export const saveFeatureState = (currentPage: number) => {
+  localStorage.setItem(SEARCH_INPUT_KEY, String(currentPage || 1));
 };

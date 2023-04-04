@@ -1,11 +1,12 @@
+import { debounce } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getImageDetails } from "../../api";
 import { ImageDetail } from "../../api/types";
 import {
+  combineImageProcessors,
   createFilteredImage,
   FilterImageData,
-  getDefaultEditValues,
   ImageEditValues,
   ImageProcessFn,
   loadFeatureState,
@@ -20,25 +21,36 @@ interface ProviderProps {
 const ImageEditStateProvider = ({ children }: ProviderProps) => {
   const { imageId } = useParams();
 
-  const defaultEditValues = useMemo(() => getDefaultEditValues(), []);
-  const [editStateValues, setEditStateValues] =
-    useState<ImageEditValues>(defaultEditValues);
+  const canvas = useMemo(() => {
+    return document.createElement("canvas");
+  }, []);
 
+  const loaded = useMemo(() => loadFeatureState(imageId ?? ""), []);
+
+  const [editStateValues, setEditStateValues] =
+    useState<ImageEditValues>(loaded);
+
+  const [imageDetails, setImageDetails] = useState<ImageDetail | undefined>(
+    undefined
+  );
+  const [editedImg, setEditedImage] = useState<FilterImageData | undefined>();
+
+  const [processors, setProcessors] = useState<ImageProcessFn[]>([]);
+
+  // triggers first image render on reload
   useEffect(() => {
     setEditStateValues(loadFeatureState(imageId ?? ""));
   }, [imageId]);
 
   useEffect(() => {
-    saveFeatureState(imageId, editStateValues);
+    const timeoutId = setTimeout(() => {
+      saveFeatureState(imageId, editStateValues);
+    }, 0);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [editStateValues, imageId]);
-
-  const [imageDetails, setImageDetails] = useState<ImageDetail | undefined>(
-    undefined
-  );
-
-  const [editedImg, setEditedImage] = useState<FilterImageData | undefined>();
-
-  const [processors, setProcessors] = useState<ImageProcessFn[]>([]);
 
   useEffect(() => {
     async function fetchImage() {
@@ -50,25 +62,24 @@ const ImageEditStateProvider = ({ children }: ProviderProps) => {
     fetchImage();
   }, [imageId]);
 
+  useEffect(() => {
+    async function filterImage() {
+      const filteredImage = await createFilteredImage(
+        Number(imageId),
+        combineImageProcessors(editStateValues, processors),
+        canvas
+      );
+      setEditedImage(filteredImage);
+    }
+    filterImage();
+  }, [editStateValues, imageId]);
+
   const handleSetEditState = (key: string, val: unknown) => {
     setEditStateValues({
       ...editStateValues,
       [key]: val
     });
   };
-
-  useEffect(() => {
-    if (!imageId) return undefined;
-    async function filterImage() {
-      const filteredImage = await createFilteredImage(
-        Number(imageId),
-        editStateValues,
-        processors
-      );
-      setEditedImage(filteredImage);
-    }
-    filterImage();
-  }, [editStateValues, imageId]);
 
   const handleAddImageProcessor = useCallback((processor: ImageProcessFn) => {
     setProcessors((prev) => [...prev, processor]);

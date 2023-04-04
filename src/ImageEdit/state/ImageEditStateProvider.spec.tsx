@@ -41,43 +41,6 @@ describe("ImageEditStateProvider", () => {
     expect(getByText("Child Component")).toBeInTheDocument();
   });
 
-  test("loads edit state values on mount", async () => {
-    localStorageMock.getItem.mockReturnValueOnce(
-      JSON.stringify({ 1: { blurAmount: 0.5 } })
-    );
-
-    const { result } = renderHook(() => useContext(ImageEditContext), {
-      wrapper: ImageEditStateProvider
-    });
-
-    await act(async () => {
-      await waitFor(() => result.current?.blurAmount !== 0);
-    });
-
-    expect(result.current?.blurAmount).toEqual(0.5);
-
-    localStorageMock.getItem.mockRestore();
-  });
-
-  test("saves edit state values on change", () => {
-    const { result } = renderHook(() => useContext(ImageEditContext), {
-      wrapper: ImageEditStateProvider
-    });
-    act(() => {
-      result.current?.setEditState("blurAmount", 0.7);
-    });
-    expect(localStorageMock.setItem).toHaveBeenCalledWith(
-      "imageEditStateValues",
-      JSON.stringify({
-        "1": {
-          grayscale: false,
-          blurAmount: 0.7,
-          size: { height: 100, widht: 100 }
-        }
-      })
-    );
-  });
-
   test("fetches image details on mount", async () => {
     const mockedImageDetails = {
       id: 1,

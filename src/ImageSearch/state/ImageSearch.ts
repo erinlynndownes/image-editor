@@ -1,20 +1,12 @@
 import { useEffect, useState } from "react";
-import { DEFAULT_FETCH_LIMIT, getFilteredImageList } from "../../api";
+import { DEFAULT_FETCH_LIMIT, getImageList } from "../../api";
 import { ImageDetail } from "../../api/types";
-import { debounce } from "lodash";
-import {
-  DEBOUNCE_TIME,
-  filterImagesByAuthorOrId,
-  loadFeatureState,
-  saveFeatureState
-} from "../feature";
+import { loadFeatureState, saveFeatureState } from "../feature";
 
 interface ImageSearchState {
   isLoading: boolean;
   images: ImageDetail[];
   hasMoreResults: boolean;
-  searchInput: string | undefined;
-  setSearchInput: (input: string | undefined) => void;
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
@@ -22,47 +14,33 @@ interface ImageSearchState {
 export const useImageSearchState = (): ImageSearchState => {
   const history = loadFeatureState();
   const [isLoading, setIsLoading] = useState(false);
-  const [hasMoreResults, setHasMoreResults] = useState(false);
+  const [hasMoreResults, setHasMoreResults] = useState(true);
   const [loadedImages, setLoadedImages] = useState<ImageDetail[]>([]);
-  const [searchInput, setSearchInput] = useState<string | undefined>(
-    history ?? undefined
-  );
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const filter = (details: ImageDetail) =>
-    filterImagesByAuthorOrId(details, searchInput);
+  const [currentPage, setCurrentPage] = useState(Number(history));
 
   useEffect(() => {
-    saveFeatureState(searchInput ?? "");
-  }, [searchInput]);
+    saveFeatureState(currentPage);
+  }, [currentPage]);
 
   useEffect(() => {
     setIsLoading(true);
     async function fetchImages() {
-      const imgs = await getFilteredImageList(
-        filter,
-        currentPage,
-        DEFAULT_FETCH_LIMIT
-      );
-
+      const imgs = await getImageList(currentPage, DEFAULT_FETCH_LIMIT);
       if (imgs) {
         setLoadedImages([...imgs]);
+        if (imgs.length < DEFAULT_FETCH_LIMIT) {
+          setHasMoreResults(false);
+        }
       }
       setIsLoading(false);
-      setHasMoreResults(!Boolean(!imgs || imgs.length <= DEFAULT_FETCH_LIMIT));
     }
-    const debouncedFetch = debounce(fetchImages, DEBOUNCE_TIME, {
-      leading: true
-    });
-    debouncedFetch();
-  }, [currentPage, searchInput]);
+    fetchImages();
+  }, [currentPage]);
 
   return {
     isLoading,
     images: loadedImages,
     hasMoreResults,
-    searchInput,
-    setSearchInput,
     currentPage,
     setCurrentPage
   };

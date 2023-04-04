@@ -1,23 +1,21 @@
 import ImageList from "../components/ImageList";
-import ImageSearchInput from "../components/ImageSearchInput";
 import { useImageSearchState } from "../state";
 
 const ImageSearch = () => {
-  const { images, isLoading, setSearchInput, setCurrentPage, searchInput } =
+  const { images, isLoading, setCurrentPage, hasMoreResults, currentPage } =
     useImageSearchState();
 
-  const handlePageChange = () => {
-    setCurrentPage((prevPage: number) => prevPage + 1);
+  const handlePageChange = (pageChange = 1) => {
+    setCurrentPage((prevPage: number) => prevPage + pageChange);
   };
   return (
-    <>
-      <ImageSearchInput onChange={setSearchInput} initialValue={searchInput} />
-      <ImageList
-        images={images}
-        handleLoadMore={handlePageChange}
-        loading={isLoading}
-      />
-    </>
+    <ImageList
+      images={images}
+      handleLoadMore={handlePageChange}
+      loading={isLoading}
+      hasMore={hasMoreResults}
+      currentPage={currentPage}
+    />
   );
 };
 

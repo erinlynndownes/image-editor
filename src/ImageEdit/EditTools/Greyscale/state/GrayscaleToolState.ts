@@ -10,10 +10,10 @@ interface GrayscaleToolState {
 export const useGrayscaleState = (
   processFn: ImageProcessFn
 ): GrayscaleToolState => {
-  const { setEditState, addImageProcessFunction } = useContext(
+  const { setEditState, addImageProcessFunction, grayscale } = useContext(
     ImageEditContext
   ) as ImageEditState;
-  const [isGrayscale, setIsGrayscale] = useState(false);
+  const [isGrayscale, setIsGrayscale] = useState(grayscale);
 
   useEffect(() => {
     addImageProcessFunction(processFn);

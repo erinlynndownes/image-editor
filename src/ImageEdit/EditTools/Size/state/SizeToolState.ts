@@ -9,10 +9,14 @@ interface SizeToolState {
 }
 
 export const useSizeToolState = (processFn: ImageProcessFn): SizeToolState => {
-  const { setEditState, addImageProcessFunction } = useContext(
+  const { setEditState, addImageProcessFunction, size } = useContext(
     ImageEditContext
   ) as ImageEditState;
-  const [currentSize, setCurrentSize] = useState({ width: 50, height: 50 });
+
+  const [currentSize, setCurrentSize] = useState({
+    width: size.width,
+    height: size.height
+  });
 
   useEffect(() => {
     addImageProcessFunction(processFn);

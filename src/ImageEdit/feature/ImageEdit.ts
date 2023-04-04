@@ -49,34 +49,24 @@ export const EditToolsConfig = [
   },
   {
     component: Size,
-    defaultValue: { height: 100, widht: 100 },
+    defaultValue: { size: { height: 200, width: 300 } },
     processImage: SizeImageRender,
     key: "Size"
   }
 ];
 
-export function getDefaultEditValues() {
-  const e = [
-    {
-      component: Grayscale,
-      defaultValue: { grayscale: false }
-    },
-    {
-      component: Blur,
-      defaultValue: { blurAmount: 0 }
-    },
-    {
-      component: Size,
-      defaultValue: { size: { height: 100, widht: 100 } }
-    }
-  ];
-  return e.reduce((acc, { defaultValue }) => {
+type DefaultValues = {
+  defaultValue: Record<string, unknown>;
+};
+
+export const getDefaultEditValues = (config: DefaultValues[]) => {
+  return config.reduce((acc, { defaultValue }) => {
     return {
       ...acc,
       ...defaultValue
     };
   }, {}) as ImageEditValues;
-}
+};
 
 export const downloadFilteredImage = (filteredImage: string | undefined) => {
   if (!filteredImage) return;
@@ -93,7 +83,11 @@ const FEATURE_STATE_KEY = "imageEditStateValues";
 export const loadFeatureState = (imageId: string) => {
   const localStorageValue = localStorage.getItem(FEATURE_STATE_KEY);
   const parsedValue = JSON.parse(localStorageValue ?? `{}`);
-  return parsedValue[imageId] || getDefaultEditValues();
+  const toolDefaults = EditToolsConfig.map(({ defaultValue, ..._ }) => ({
+    defaultValue: defaultValue
+  }));
+
+  return parsedValue[imageId] || getDefaultEditValues(toolDefaults);
 };
 
 export const saveFeatureState = (

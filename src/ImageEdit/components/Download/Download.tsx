@@ -5,7 +5,13 @@ interface DownloadProps {
 }
 
 const Download = ({ handleDownload }: DownloadProps) => {
-  return <Button onClick={handleDownload}>Download</Button>;
+  return (
+    <div className="center-button">
+      <Button className="download-button" onClick={handleDownload}>
+        Download
+      </Button>
+    </div>
+  );
 };
 
 export default Download;

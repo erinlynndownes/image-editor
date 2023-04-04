@@ -10,10 +10,10 @@ interface GrayscaleToolState {
 export const useBlurToolState = (
   processFn: ImageProcessFn
 ): GrayscaleToolState => {
-  const { setEditState, addImageProcessFunction } = useContext(
+  const { setEditState, addImageProcessFunction, blurAmount } = useContext(
     ImageEditContext
   ) as ImageEditState; //grr cast
-  const [currentBlur, setCurrentBlur] = useState(0);
+  const [currentBlur, setCurrentBlur] = useState(blurAmount);
 
   useEffect(() => {
     addImageProcessFunction(processFn);

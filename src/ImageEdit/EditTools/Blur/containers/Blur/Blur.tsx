@@ -6,9 +6,11 @@ import { useBlurToolState } from "../../state";
 type BlurProps = { processFn: ImageProcessFn };
 
 const Blur = ({ processFn }: BlurProps) => {
-  const { changeBlurAmount } = useBlurToolState(processFn);
+  const { changeBlurAmount, blurAmount } = useBlurToolState(processFn);
 
-  return <BlurSlider handleChange={changeBlurAmount} />;
+  return (
+    <BlurSlider handleChange={changeBlurAmount} defaultValue={blurAmount} />
+  );
 };
 
 export default Blur;

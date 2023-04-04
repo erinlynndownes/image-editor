@@ -10,12 +10,14 @@ const DisplayCanvas = ({
   height
 }: DisplayCanvasProps) => {
   return (
-    <img
-      src={filteredImageUrl}
-      width={width}
-      height={height}
-      alt="Filtered image"
-    />
+    <div className="display-canvas">
+      <img
+        src={filteredImageUrl}
+        width={width}
+        height={height}
+        alt="Filtered image"
+      />
+    </div>
   );
 };
 

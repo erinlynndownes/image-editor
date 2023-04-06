@@ -10,13 +10,12 @@ export interface FilterImageData {
 export const createFilteredImage = async (
   imageId: number,
   imageProcessData: ImageProcessData,
-  canvas: HTMLCanvasElement
+  canvas: HTMLCanvasElement,
+  blob: Blob
 ): Promise<FilterImageData | undefined> => {
   const drawWidth = imageProcessData.width;
   const drawHeight = imageProcessData.height;
   const filterString = imageProcessData.filterString;
-
-  const blob = await getImageById(imageId);
 
   if (!drawWidth || !drawHeight) return;
   const ctx = canvas.getContext("2d");

@@ -1,7 +1,7 @@
 import { debounce } from "lodash";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getImageDetails } from "../../api";
+import { getImageById, getImageDetails } from "../../api";
 import { ImageDetail } from "../../api/types";
 import {
   combineImageProcessors,
@@ -37,6 +37,16 @@ const ImageEditStateProvider = ({ children }: ProviderProps) => {
 
   const [processors, setProcessors] = useState<ImageProcessFn[]>([]);
 
+  const [initialBlob, setInitialBlob] = useState<Blob | undefined>(undefined);
+
+  useEffect(() => {
+    async function fetchBlob() {
+      const blob = await getImageById(Number(imageId));
+      setInitialBlob(blob);
+    }
+    fetchBlob();
+  }, [imageId]);
+
   // triggers first image render on reload
   useEffect(() => {
     setEditStateValues(loadFeatureState(imageId ?? ""));
@@ -64,15 +74,17 @@ const ImageEditStateProvider = ({ children }: ProviderProps) => {
 
   useEffect(() => {
     async function filterImage() {
+      if (!initialBlob) return;
       const filteredImage = await createFilteredImage(
         Number(imageId),
         combineImageProcessors(editStateValues, processors),
-        canvas
+        canvas,
+        initialBlob
       );
       setEditedImage(filteredImage);
     }
     filterImage();
-  }, [editStateValues, imageId]);
+  }, [editStateValues, imageId, initialBlob]);
 
   const handleSetEditState = (key: string, val: unknown) => {
     setEditStateValues({

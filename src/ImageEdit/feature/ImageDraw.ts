@@ -1,4 +1,3 @@
-import { getImageById } from "../../api";
 import { ImageEditValues, ImageProcessData, ImageProcessFn } from "./ImageEdit";
 
 export interface FilterImageData {

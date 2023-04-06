@@ -1,5 +1,4 @@
 import { Button, List, Typography } from "antd";
-import { DEFAULT_FETCH_LIMIT } from "../../../api";
 import { ImageDetail } from "../../../api/types";
 import ImageCard from "../ImageCard";
 

@@ -7,7 +7,6 @@ export interface FilterImageData {
 }
 
 export const createFilteredImage = async (
-  imageId: number,
   imageProcessData: ImageProcessData,
   canvas: HTMLCanvasElement,
   blob: Blob

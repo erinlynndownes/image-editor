@@ -75,7 +75,6 @@ const ImageEditStateProvider = ({ children }: ProviderProps) => {
     async function filterImage() {
       if (!initialBlob) return;
       const filteredImage = await createFilteredImage(
-        Number(imageId),
         combineImageProcessors(editStateValues, processors),
         canvas,
         initialBlob
@@ -83,7 +82,7 @@ const ImageEditStateProvider = ({ children }: ProviderProps) => {
       setEditedImage(filteredImage);
     }
     filterImage();
-  }, [editStateValues, imageId, initialBlob]);
+  }, [editStateValues, initialBlob]);
 
   const handleSetEditState = (key: string, val: unknown) => {
     setEditStateValues({
